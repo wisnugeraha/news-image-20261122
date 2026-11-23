@@ -19,7 +19,12 @@ SOURCE = os.path.join(HERE, "entry.png")
 def main():
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
-    shutil.copyfile(SOURCE, os.path.join(out_dir, "entry.png"))
+    dest = os.path.join(out_dir, "entry.png")
+    shutil.copyfile(SOURCE, dest)
+    # Verify the copy landed intact: same size as the source, or fail loudly
+    # instead of silently handing the grader a truncated image.
+    if os.path.getsize(dest) != os.path.getsize(SOURCE):
+        raise SystemExit("entry.png copy failed: size mismatch")
 
 
 if __name__ == "__main__":
